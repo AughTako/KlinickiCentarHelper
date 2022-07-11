@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'GUI.ui'
+# Form implementation generated from reading ui file 'GUIv2.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -9,12 +9,15 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 from lokalizacijaDialog import Ui_Dialog
 from fistulaDialog import Ui_fistulaDialog
 from apscesiDialog import Ui_apscDialog
 
 class Ui_MainWindow(object):
+    punoIme = jmbgPolje = lbo = pol = filijala = datumVazenjaZKpolje = ""
+    vidTerapije = lek = lokalizacija = fistula = apsces = klinickaAktivnost = {}
+    ekstraIntManif = hbAntigen = testClost = False
+    
     def lokalizacijaDialog(self):
         if(self.drugoCheckBox.isChecked()):
             Dialog = QtWidgets.QDialog()
@@ -32,6 +35,7 @@ class Ui_MainWindow(object):
             fistulaDialog.show()
             self.fistDrugoCheckBox.setChecked(False)
             fistulaDialog.exec_()
+
     def apscesiDialog(self):
         if(self.apscesDrugoCheckBox.isChecked()):
             apscDialog = QtWidgets.QDialog()
@@ -40,6 +44,7 @@ class Ui_MainWindow(object):
             apscDialog.show()
             self.apscesDrugoCheckBox.setChecked(False)
             apscDialog.exec_()
+    
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(782, 880)
@@ -129,6 +134,13 @@ class Ui_MainWindow(object):
         self.label_9.setObjectName("label_9")
         self.label_10 = QtWidgets.QLabel(self.OsnovniPodaci)
         self.label_10.setGeometry(QtCore.QRect(10, 280, 81, 21))
+        self.label_28 = QtWidgets.QLabel(self.OsnovniPodaci)
+        self.label_28.setObjectName(u"label_28")
+        self.label_28.setGeometry(QtCore.QRect(370, 50, 31, 21))
+        self.label_28.setFont(font)
+        self.LBO = QtWidgets.QLineEdit(self.OsnovniPodaci)
+        self.LBO.setObjectName(u"LBO")
+        self.LBO.setGeometry(QtCore.QRect(410, 50, 113, 20))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.label_10.setFont(font)
@@ -471,6 +483,15 @@ class Ui_MainWindow(object):
         self.apscesDrugoCheckBox = QtWidgets.QCheckBox(self.apscesHiddenGroupBox_2)
         self.apscesDrugoCheckBox.setGeometry(QtCore.QRect(200, 10, 51, 17))
         self.apscesDrugoCheckBox.setObjectName("apscesDrugoCheckBox")
+        self.JMBG = QtWidgets.QLineEdit(self.OsnovniPodaci)
+        self.JMBG.setGeometry(QtCore.QRect(410, 20, 113, 20))
+        self.JMBG.setObjectName("JMBG")
+        self.label_18 = QtWidgets.QLabel(self.OsnovniPodaci)
+        self.label_18.setGeometry(QtCore.QRect(370, 20, 31, 21))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_18.setFont(font)
+        self.label_18.setObjectName("label_18")
         self.dodajPoljaTab.addTab(self.OsnovniPodaci, "")
         self.dodajPoljaTab1 = QtWidgets.QWidget()
         self.dodajPoljaTab1.setObjectName("dodajPoljaTab1")
@@ -494,7 +515,7 @@ class Ui_MainWindow(object):
         self.apscDa.toggled.connect(self.apscesHiddenGroupBox_2.show)
         self.fistulaNe.toggled.connect(self.fistulaHiddenGroupBox.hide)
         self.apscNe.toggled.connect(self.apscesHiddenGroupBox_2.hide)
-        
+        self.izmeniOsnPodatkeDugme.clicked.connect(self.takeArgs)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -539,7 +560,7 @@ class Ui_MainWindow(object):
         self.qgNeg.setText(_translate("MainWindow", "Negativan"))
         self.qgPoz.setText(_translate("MainWindow", "Pozitivan"))
         self.rtgUredan.setText(_translate("MainWindow", "Nalaz uredan"))
-        self.rtgIzmenjen.setText(_translate("MainWindow", "Izmenjen"))
+        self.rtgIzmenjen.setText(_translate("MainWindow", "Izmenjen (DODATI)"))
         self.hbNeg.setText(_translate("MainWindow", "Negativan"))
         self.hbPoz.setText(_translate("MainWindow", "Pozitivan"))
         self.testNeg.setText(_translate("MainWindow", "Negativan"))
@@ -576,12 +597,63 @@ class Ui_MainWindow(object):
         self.periAnApscesCheckBox.setText(_translate("MainWindow", "Perianalni"))
         self.interIntCheckBox.setText(_translate("MainWindow", "Interintestinalni"))
         self.apscesDrugoCheckBox.setText(_translate("MainWindow", "Drugo"))
+        self.label_18.setText(_translate("MainWindow", "JMBG"))
         self.dodajPoljaTab.setTabText(self.dodajPoljaTab.indexOf(self.OsnovniPodaci), _translate("MainWindow", "Osnovni podaci"))
         self.dodajPoljeDugme.setText(_translate("MainWindow", "Dodaj polje"))
         self.dodajPoljaTab.setTabText(self.dodajPoljaTab.indexOf(self.dodajPoljaTab1), _translate("MainWindow", "Dodaj polja"))
+        self.label_28.setText(_translate("MainWindow", u"LBO", None))
         self.fistulaHiddenGroupBox.hide()
         self.apscesHiddenGroupBox_2.hide()
 
+    def errorMessage(self, displayMessage = ""):
+        # Neki osnovni errorMessage dialog
+        # sluzi da prikaze neku poruku da obavesti
+        # korisnika sta nedostaje u polju
+        
+        error_dialog = QtWidgets.QErrorMessage()
+        error_dialog.showMessage(displayMessage)
+        error_dialog.exec_()
+
+    def takeArgs(self): 
+        # Prvi deo sa imenom i prezimenom
+        # konkatenacija dva string u punoIme
+        # formatiranje prikaza datuma u nesto sto lici na dd/mm/yyyy
+        # TODO : mora da postoji bolji nacin da se proveri
+        #        da li je polje modifikovano ili nesto???
+        ime = prezime = ""
+        if(self.Ime.text() != ""):
+            ime = self.Ime.text()
+            ime = ime.lower()
+            self.punoIme = ime.capitalize()
+        if(self.Prezime.text() != ""):
+            prezime = self.Prezime.text()
+            prezime = prezime.lower()
+            self.punoIme += " " + prezime.capitalize()
+        if(self.Filijala.text() != ""):
+            self.filijala = self.Filijala.text()
+            self.filijala = self.filijala.upper()
+        if(self.punoIme == ""):
+            self.errorMessage("Nedostaje ime!")
+        if(self.JMBG.text() != ""):
+            print(self.JMBG.text())
+            self.jmbgPolje = self.JMBG.text()
+            if(not self.jmbgPolje.isdigit()):
+                self.errorMessage("JMBG sadrzi slova!")
+            elif(len(self.jmbgPolje) < 13):
+                self.errorMessage("JMBG ima manje od 13 cifara!")
+            elif(len(self.jmbgPolje) > 13):
+                self.errorMessage("JMBG ima vise od 13 cifara!")
+        if(self.jmbgPolje == ''):
+            self.errorMessage("Nedostaje JMBG!")
+        if(self.LBO.text() != ""):
+            self.lbo = self.LBO.text()
+            print(self.lbo)
+        if(self.lbo == ''):
+            self.errorMessage("Nedostaje LBO!")
+        self.datumVazenjaZKpolje = self.datumVazenjaZK.dateTime().toString("dd.MM.yyyy")
+        self.vidTerapije = self.vidTerapijeCBox.currentText()
+        print(self.datumVazenjaZKpolje + " Ime: " + self.punoIme + " Filijala: " + self.filijala + " JMBG:" + self.jmbgPolje + " " + self.vidTerapije)
+            
 
 if __name__ == "__main__":
     import sys
