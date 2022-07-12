@@ -13,39 +13,119 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from lokalizacijaDialog import Ui_Dialog
 from fistulaDialog import Ui_fistulaDialog
 from apscesiDialog import Ui_apscDialog
+from manifestacijeDialog import Ui_ManifestacijeDialog
+
+data = {
+    "ime" : "",
+    "jmbg" : '',
+    "lbo" : '',
+    "filijala" : "",
+    "knjizica" : "",
+    "vid_terapije" : "",
+    "lek_lista" : [],
+    "rezim_doziranja" : 0,
+    "pol" : "",
+    "tm" : "",
+    "tv" : "",
+    "bmi" : "",
+    "lokalizacija" : [],
+    "lok_drugo" : "",
+    "ponasanje_bolesti" : [],
+    "fistula" : [],
+    "fist_drugo" : "",
+    "apsces" : [],
+    "trajanje_bolesti" : "",
+    "ekstraintestinalne_manifestacije" : False,
+    "vrsta_eim" : "",
+    "klinicka_aktivnost" : "",
+    "crp" : "",
+    "kalprotektin" : "???",
+    "quantiferon_gold" : True,
+    "rtg_uredan" : True,
+    "clostridium" : False,
+    "hbs_antigen" : True,
+    "endoskopija" : "",
+    "operacija" : True,
+    "br_operacija" : 2,
+    "razlog_operacije" : 3,
+    "prisutna" : 0,
+
+    "kortiko_oralno" : 2,
+    "kortiko_doza" : "2mg",
+    "kortiko_pocetak" : '24.7.2022.',
+    "kortiko_kraj" : True,
+    "kortiko_poboljsanje" : True,
+    "kortiko_kortikozavisan" : True,
+    "kortiko_kortikorezistentan" : True,
+
+    "aza_doza" : "2mg",
+    "aza_pocetak" : '24.7.2022.',
+    "aza_kraj" : True,
+    "aza_alergija" : True,
+    "aza_rezistentan" : True,
+
+    "ifx_doza" : "2mg",
+    "ifx_pocetak" : '24.7.2022.',
+    "ifx_broj_ampula" : 7,
+    "ifx_poslednja_doza" : '25.7.2022.',
+    "ifx_sledeca_doza" : '29.7.2022.',
+    "ifx_kraj" : True,
+    
+    "nuspojave_na_lekove" : False,
+    "nuspojave_lek" : "",
+    "nuspojave_vrsta" : "",
+    "trajanje_biloske_terapije" : "9 meseci",
+
+    "datum" : "26.7.2022."
+}
+
 
 class Ui_MainWindow(object):
-    punoIme = jmbgPolje = lbo = starost = pol = filijala = datumVazenjaZKpolje = telesnaMasa = telesnaVisina = bodyMassInd = vidTerapije = ''
-    lek = lokalizacija = fistula = apsces = klinickaAktivnost = {}
+    punoIme = jmbgPolje = lbo = starost = pol = filijala = datumVazenjaZKpolje = telesnaMasa = telesnaVisina = bodyMassInd = vidTerapije = klinickaAktivnost = ''
+    crpPolje = fekalniKalprotektin = ''
+    lek = []
+    lokalizacija = []
+    ponasanjeBolesti = []
+    fistula = []
+    apsces = []
     ekstraIntManif = hbAntigen = testClost = False
-    
+    lok_Dialog = Ui_Dialog()
+    fist_Dialog = Ui_fistulaDialog()
+    apsc_Dialog = Ui_apscDialog()
+    manif_Dialog = Ui_ManifestacijeDialog()
+
     def lokalizacijaDialog(self):
         if(self.drugoCheckBox.isChecked()):
             Dialog = QtWidgets.QDialog()
-            ui = Ui_Dialog()
-            ui.setupUi(Dialog)
+            self.lok_Dialog = Ui_Dialog()
+            self.lok_Dialog.setupUi(Dialog)
             Dialog.show()
-            self.drugoCheckBox.setChecked(False)
             Dialog.exec_()
 
     def fistulaDialog(self):
         if(self.fistDrugoCheckBox.isChecked()):
             fistulaDialog = QtWidgets.QDialog()
-            ui = Ui_fistulaDialog()
-            ui.setupUi(fistulaDialog)
+            self.fist_Dialog = Ui_fistulaDialog()
+            self.fist_Dialog.setupUi(fistulaDialog)
             fistulaDialog.show()
-            self.fistDrugoCheckBox.setChecked(False)
             fistulaDialog.exec_()
 
     def apscesiDialog(self):
         if(self.apscesDrugoCheckBox.isChecked()):
             apscDialog = QtWidgets.QDialog()
-            ui = Ui_apscDialog()
-            ui.setupUi(apscDialog)
+            self.apsc_Dialog = Ui_apscDialog()
+            self.apsc_Dialog.setupUi(apscDialog)
             apscDialog.show()
-            self.apscesDrugoCheckBox.setChecked(False)
             apscDialog.exec_()
     
+    def manifestDialog(self):
+        if(self.eimNe.isChecked()):
+            Dialog = QtWidgets.QDialog()
+            self.manif_Dialog = Ui_ManifestacijeDialog()
+            self.manif_Dialog.setupUi(Dialog)
+            Dialog.show()
+            Dialog.exec_()
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName('MainWindow')
         MainWindow.resize(782, 880)
@@ -513,6 +593,7 @@ class Ui_MainWindow(object):
         self.drugoCheckBox.stateChanged.connect(self.lokalizacijaDialog)
         self.apscesDrugoCheckBox.stateChanged.connect(self.apscesiDialog)
         self.fistDrugoCheckBox.stateChanged.connect(self.fistulaDialog)
+        self.eimNe.toggled.connect(self.manifestDialog)
         self.fistulaDa.toggled.connect(self.fistulaHiddenGroupBox.show)
         self.apscDa.toggled.connect(self.apscesHiddenGroupBox_2.show)
         self.fistulaNe.toggled.connect(self.fistulaHiddenGroupBox.hide)
@@ -577,7 +658,7 @@ class Ui_MainWindow(object):
         self.rektumCheckBox.setText(_translate('MainWindow', 'Rektum'))
         self.proksSegCheckBox.setText(_translate('MainWindow', 'Proksimalni segmenti GI trakta'))
         self.drugoCheckBox.setText(_translate('MainWindow', 'Drugo'))
-        self.datumTrajanja.setDisplayFormat(_translate('MainWindow', 'yyyy'))
+        self.datumTrajanja.setDisplayFormat(_translate('MainWindow', 'MM/yyyy'))
         self.datumEndo.setDisplayFormat(_translate('MainWindow', 'MM/yyyy'))
         self.inflmCheckBox.setText(_translate('MainWindow', 'Inflamatorna forma'))
         self.penetrCheckBox.setText(_translate('MainWindow', 'Penetrantna'))
@@ -653,7 +734,7 @@ class Ui_MainWindow(object):
         self.lbo = self.LBO.text() if self.LBO.text() != '' else self.errorMessage('Nedostaje LBO')
         if(self.LBO.text() == ''):
             return
-        self.datumVazenjaZKpolje = self.datumVazenjaZK.dateTime().toString('dd.MM.yyyy')
+        self.datumVazenjaZKpolje = self.datumVazenjaZK.dateTime().toString('dd.MM.yyyy.')
         
         # Drugi klaster podataka
         
@@ -666,12 +747,109 @@ class Ui_MainWindow(object):
         if(self.TV.text() == ''):
             return
         self.bodyMassInd = float(self.telesnaMasa) / (float(self.telesnaVisina)/100 * float(self.telesnaVisina)/100)
-        self.BMI.insert(str(self.bodyMassInd))
+        self.BMI.insert(str(round(self.bodyMassInd, 2)))
         self.starost = int(self.godineZivota.text())
+            
         # Treci klaster podataka
 
+        if(self.ileumcheckBox.isChecked()):
+            self.lokalizacija.append(1)
+        if(self.ileumkolonCheckBox.isChecked()):
+            self.lokalizacija.append(2)
+        if(self.kolonCheckBox.isChecked()):
+            self.lokalizacija.append(3)
+        if(self.proksSegCheckBox.isChecked()):
+            self.lokalizacija.append(4)
+        if(self.rektumCheckBox.isChecked()):
+            self.lokalizacija.append(5)
+        if(self.drugoCheckBox.isChecked()):
+            self.lokalizacija.append(6)
+            data['lok_drugo'] = self.lok_Dialog.drugeLok
+        
+        if(self.inflmCheckBox.isChecked()):
+            self.ponasanjeBolesti.append(1)
+        if(self.penetrCheckBox.isChecked()):
+            self.ponasanjeBolesti.append(2)
+        if(self.stenoCheckBox.isChecked()):
+            self.ponasanjeBolesti.append(3)
+            
+        if(self.fistulaDa.isChecked()):
+            if(self.periAnCheckBox.isChecked()):
+                self.fistula.append(1)
+            if(self.enteroKutCheckBox.isChecked()):
+                self.fistula.append(2)
+            if(self.enteroVagCheckBox.isChecked()):
+                self.fistula.append(3)
+            if(self.enteroEntCheckBox.isChecked()):
+                self.fistula.append(4)
+            if(self.enteroVezCheckBox.isChecked()):
+                self.fistula.append(5)
+            if(self.fistDrugoCheckBox.isChecked()):
+                self.fistula.append(6)
+                data['fist_drugo'] = self.fist_Dialog.fist_Drugo
+        
+        if(self.apscDa.isChecked()):
+            if(self.periAnApscesCheckBox.isChecked()):
+                self.apsces.append(1)
+            if(self.interIntCheckBox.isChecked()):
+                self.apsces.append(2)
+            if(self.apscesDrugoCheckBox.isChecked()):
+                self.apsces.append(3)
+                data['apsc_drugo'] = self.apsc_Dialog.apsc_Ostalo
+        # TODO duzina trajanja bolesti, manifestacije    
 
+        if(self.eimNe.isChecked()):
+            data['ekstraintestinalne_manifestacije'] = self.manif_Dialog.opis_Manifest
+
+        data['trajanje_bolesti'] = str(round(((self.datumTrajanja.dateTime().daysTo(QtCore.QDateTime.currentDateTime()) + 1)*0.0329), 0)).replace('.0', '') + ' meseci'
+        
+        self.klinickaAktivnost = self.kAktBolestiCBox.currentText()
+        
+        # Poslednji klaster
+        self.crpPolje = self.CRP.text() if self.CRP.text() != '' else self.errorMessage("Nedostaje CRP")
+        if(self.CRP.text() == ''):
+            return
+        
+        self.fekalniKalprotektin = self.fekalniKal.text() if self.fekalniKal.text() != '' else self.errorMessage("Nedostaje fekalni kalprotektin!")
+        if(self.fekalniKal.text() == ''):
+            return
+        
+        data['crp'] = self.crpPolje
+        data['kalprotektin'] = self.fekalniKalprotektin
+        data['quantiferon_gold'] = True if self.qgPoz.isChecked() else False
+        data['rtg_uredan'] = True if self.rtgUredan.isChecked() else False
+        data['clostridium'] = True if self.testPoz.isChecked() else False
+        data['hbs_antigen'] = True if self.hbPoz.isChecked() else False
+        data['endoskopija'] = True if self.endoPrisustvo.isChecked() else False
+        data['operacija'] = True if self.opDa.isChecked() else False
+        # Dodavanje u recnik
+        
+        data['ime'] = self.punoIme
+        data['jmbg'] = self.jmbgPolje
+        data['lbo'] = self.lbo
+        data['filijala'] = self.filijala
+        data['knjizica'] = self.datumVazenjaZKpolje
+        if(self.vidTerapije == 'Uvođenje leka u terapiju'):
+            data['vid_terapije'] = 1
+        elif(self.vidTerapije == 'Terapije održavanja'):
+            data['vid_terapije'] = 2
+        elif(self.vidTerapije == 'Promena leka'):
+            data['vid_terapije'] = 3
+        else:
+            data['vid_terapije'] = 4
+        
+        data['pol'] = self.pol
+        data['tm'] = self.telesnaMasa
+        data['tv'] = self.telesnaVisina
+        data['bmi'] = self.bodyMassInd
+        data['lokalizacija'] = self.lokalizacija
+        data['fistula'] = self.fistula
+        data['apsces'] = self.apsces
+        data['klinicka_aktivnost'] = self.klinickaAktivnost
+        data['datum'] = self.datumEndo.dateTime().toString('MM.yyyy.')
         print(self.datumVazenjaZKpolje + ' Ime: ' + self.punoIme + ' Filijala: ' + self.filijala + ' JMBG:' + self.jmbgPolje + ' ' + self.vidTerapije)
+        for item in data:
+            print(item + " " + str(data[item]))
 
 
 if __name__ == '__main__':
