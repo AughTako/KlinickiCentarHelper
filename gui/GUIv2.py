@@ -128,6 +128,7 @@ class Ui_MainWindow(object):
 
     def setupUi(self, MainWindow):
         MainWindow.setObjectName('MainWindow')
+        MainWindow.setFixedSize(782, 880)
         MainWindow.resize(782, 880)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName('centralwidget')
@@ -796,7 +797,7 @@ class Ui_MainWindow(object):
             if(self.apscesDrugoCheckBox.isChecked()):
                 self.apsces.append(3)
                 data['apsc_drugo'] = self.apsc_Dialog.apsc_Ostalo
-        # TODO duzina trajanja bolesti, manifestacije    
+        
 
         if(self.eimNe.isChecked()):
             data['ekstraintestinalne_manifestacije'] = self.manif_Dialog.opis_Manifest
