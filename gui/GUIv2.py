@@ -15,8 +15,8 @@ from fistulaDialog import Ui_fistulaDialog
 from apscesiDialog import Ui_apscDialog
 
 class Ui_MainWindow(object):
-    punoIme = jmbgPolje = lbo = pol = filijala = datumVazenjaZKpolje = telesnaMasa = telesnaVisina = bodyMassInd = ''
-    vidTerapije = lek = lokalizacija = fistula = apsces = klinickaAktivnost = {}
+    punoIme = jmbgPolje = lbo = starost = pol = filijala = datumVazenjaZKpolje = telesnaMasa = telesnaVisina = bodyMassInd = vidTerapije = ''
+    lek = lokalizacija = fistula = apsces = klinickaAktivnost = {}
     ekstraIntManif = hbAntigen = testClost = False
     
     def lokalizacijaDialog(self):
@@ -617,11 +617,11 @@ class Ui_MainWindow(object):
         error_dialog.exec_()
 
     def takeArgs(self): 
-        # Prvi deo sa imenom i prezimenom
-        # konkatenacija dva string u punoIme
-        # formatiranje prikaza datuma u nesto sto lici na dd/mm/yyyy
         # TODO : mora da postoji bolji nacin da se proveri
         #        da li je polje modifikovano ili nesto???
+
+        # Prvi klaster podataka
+       
         if(self.Ime.text() != ''):
             ime = self.Ime.text()
             ime = ime.lower()
@@ -654,8 +654,11 @@ class Ui_MainWindow(object):
         if(self.LBO.text() == ''):
             return
         self.datumVazenjaZKpolje = self.datumVazenjaZK.dateTime().toString('dd.MM.yyyy')
+        
+        # Drugi klaster podataka
+        
         self.vidTerapije = self.vidTerapijeCBox.currentText()
-        self.pol = 'M' if self.M.isChecked() else 'Z'
+        self.pol = 'M' if self.M.isChecked() else 'Ž'
         self.telesnaMasa = self.TM.text() if self.TM.text() != '' else self.errorMessage('Nedostaje telesna masa!')
         if(self.TM.text() == ''):
             return
@@ -664,9 +667,12 @@ class Ui_MainWindow(object):
             return
         self.bodyMassInd = float(self.telesnaMasa) / (float(self.telesnaVisina)/100 * float(self.telesnaVisina)/100)
         self.BMI.insert(str(self.bodyMassInd))
-        #self.BMI.setEnabled(False)
+        self.starost = int(self.godineZivota.text())
+        # Treci klaster podataka
+
+
         print(self.datumVazenjaZKpolje + ' Ime: ' + self.punoIme + ' Filijala: ' + self.filijala + ' JMBG:' + self.jmbgPolje + ' ' + self.vidTerapije)
-            
+
 
 if __name__ == '__main__':
     import sys
