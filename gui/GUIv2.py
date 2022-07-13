@@ -225,6 +225,33 @@ class Ui_MainWindow(object):
         self.LBO.setGeometry(QtCore.QRect(410, 50, 113, 20))
         font = QtGui.QFont()
         font.setPointSize(10)
+        self.lekoviGBox = QtWidgets.QGroupBox(self.OsnovniPodaci)
+        self.lekoviGBox.setGeometry(QtCore.QRect(380, 150, 221, 141))
+        self.lekoviGBox.setObjectName("lekoviGBox")
+        self.remicadeCBox = QtWidgets.QCheckBox(self.lekoviGBox)
+        self.remicadeCBox.setGeometry(QtCore.QRect(10, 20, 70, 17))
+        self.remicadeCBox.setObjectName("remicadeCBox")
+        self.remsimaCBox = QtWidgets.QCheckBox(self.lekoviGBox)
+        self.remsimaCBox.setGeometry(QtCore.QRect(10, 40, 70, 17))
+        self.remsimaCBox.setObjectName("remsimaCBox")
+        self.inflectraCBox = QtWidgets.QCheckBox(self.lekoviGBox)
+        self.inflectraCBox.setGeometry(QtCore.QRect(10, 60, 70, 17))
+        self.inflectraCBox.setObjectName("inflectraCBox")
+        self.humiraCBox = QtWidgets.QCheckBox(self.lekoviGBox)
+        self.humiraCBox.setGeometry(QtCore.QRect(10, 80, 70, 17))
+        self.humiraCBox.setObjectName("humiraCBox")
+        self.amgevitaCBox = QtWidgets.QCheckBox(self.lekoviGBox)
+        self.amgevitaCBox.setGeometry(QtCore.QRect(10, 100, 70, 17))
+        self.amgevitaCBox.setObjectName("amgevitaCBox")
+        self.hyrimozCBox = QtWidgets.QCheckBox(self.lekoviGBox)
+        self.hyrimozCBox.setGeometry(QtCore.QRect(10, 120, 70, 17))
+        self.hyrimozCBox.setObjectName("hyrimozCBox")
+        self.idacioCBox = QtWidgets.QCheckBox(self.lekoviGBox)
+        self.idacioCBox.setGeometry(QtCore.QRect(130, 20, 70, 17))
+        self.idacioCBox.setObjectName("idacioCBox")
+        self.entyvioCBox = QtWidgets.QCheckBox(self.lekoviGBox)
+        self.entyvioCBox.setGeometry(QtCore.QRect(130, 40, 70, 17))
+        self.entyvioCBox.setObjectName("entyvioCBox")
         self.label_10.setFont(font)
         self.label_10.setObjectName('label_10')
         self.label_11 = QtWidgets.QLabel(self.OsnovniPodaci)
@@ -686,6 +713,15 @@ class Ui_MainWindow(object):
         self.dodajPoljeDugme.setText(_translate('MainWindow', 'Dodaj polje'))
         self.dodajPoljaTab.setTabText(self.dodajPoljaTab.indexOf(self.dodajPoljaTab1), _translate('MainWindow', 'Dodaj polja'))
         self.label_28.setText(_translate('MainWindow', u'LBO', None))
+        self.lekoviGBox.setTitle(_translate("MainWindow", "Lekovi"))
+        self.remicadeCBox.setText(_translate("MainWindow", "Remicade"))
+        self.remsimaCBox.setText(_translate("MainWindow", "Remsima"))
+        self.inflectraCBox.setText(_translate("MainWindow", "Inflectra"))
+        self.humiraCBox.setText(_translate("MainWindow", "Humira"))
+        self.amgevitaCBox.setText(_translate("MainWindow", "Amgevita"))
+        self.hyrimozCBox.setText(_translate("MainWindow", "Hyrimoz"))
+        self.idacioCBox.setText(_translate("MainWindow", "Idacio"))
+        self.entyvioCBox.setText(_translate("MainWindow", "Entyvio"))
         self.fistulaHiddenGroupBox.hide()
         self.apscesHiddenGroupBox_2.hide()
 
@@ -750,7 +786,23 @@ class Ui_MainWindow(object):
         self.bodyMassInd = float(self.telesnaMasa) / (float(self.telesnaVisina)/100 * float(self.telesnaVisina)/100)
         self.BMI.insert(str(round(self.bodyMassInd, 2)))
         self.starost = int(self.godineZivota.text())
-            
+        
+        if(self.remicadeCBox.isChecked()):
+            self.lek.append(1)
+        if(self.remsimaCBox.isChecked()):
+            self.lek.append(2)
+        if(self.inflectraCBox.isChecked()):
+            self.lek.append(3)
+        if(self.humiraCBox.isChecked()):
+            self.lek.append(4)
+        if(self.amgevitaCBox.isChecked()):
+            self.lek.append(5)
+        if(self.hyrimozCBox.isChecked()):
+            self.lek.append(6)
+        if(self.idacioCBox.isChecked()):
+            self.lek.append(7)
+        if(self.entyvioCBox.isChecked()):
+            self.lek.append(8)
         # Treci klaster podataka
 
         if(self.ileumcheckBox.isChecked()):
@@ -788,6 +840,9 @@ class Ui_MainWindow(object):
             if(self.fistDrugoCheckBox.isChecked()):
                 self.fistula.append(6)
                 data['fist_drugo'] = self.fist_Dialog.fist_Drugo
+            if(not (self.periAnCheckBox.isChecked() or self.enteroKutCheckBox.isChecked() or self.enteroVagCheckBox.isChecked() or self.enteroEntCheckBox.isChecked() or self.enteroVezCheckBox.isChecked() or self.fistDrugoCheckBox.isChecked())):
+                self.errorMessage("Postoji fistula ali nije izabrana ni jedna!")
+                return
         
         if(self.apscDa.isChecked()):
             if(self.periAnApscesCheckBox.isChecked()):
@@ -797,8 +852,10 @@ class Ui_MainWindow(object):
             if(self.apscesDrugoCheckBox.isChecked()):
                 self.apsces.append(3)
                 data['apsc_drugo'] = self.apsc_Dialog.apsc_Ostalo
+            if(not(self.periAnApscesCheckBox.isChecked() or self.interIntCheckBox.isChecked() or self.apscesDrugoCheckBox.isChecked())):
+                self.errorMessage("Postoji apsces ali nije izabran ni jedan!")
+                return
         
-
         if(self.eimNe.isChecked()):
             data['ekstraintestinalne_manifestacije'] = self.manif_Dialog.opis_Manifest
 
@@ -817,12 +874,25 @@ class Ui_MainWindow(object):
         
         data['crp'] = self.crpPolje
         data['kalprotektin'] = self.fekalniKalprotektin
-        data['quantiferon_gold'] = True if self.qgPoz.isChecked() else False
-        data['rtg_uredan'] = True if self.rtgUredan.isChecked() else False
-        data['clostridium'] = True if self.testPoz.isChecked() else False
-        data['hbs_antigen'] = True if self.hbPoz.isChecked() else False
-        data['endoskopija'] = True if self.endoPrisustvo.isChecked() else False
-        data['operacija'] = True if self.opDa.isChecked() else False
+        if(not self.qgPoz.isChecked() and not self.qgNeg.isChecked()):
+            self.errorMessage("Izabrati odgovarajuće polje : Quantiferon gold ; trenutno ništa nije izabrano")
+            return
+        if(not self.rtgUredan.isChecked() and not self.rtgIzmenjen.isChecked()):
+            self.errorMessage("Izabrati odgovarajuće polje : RTG srca i pluća ; trenutno ništa nije izabrano")
+            return
+        if(not self.testPoz.isChecked() and not self.testNeg.isChecked()):
+            self.errorMessage("Izabrati odgovarajuće polje : Test na Clostridium difficile ; trenutno ništa nije izabrano")
+            return
+        if(not self.hbPoz.isChecked() and not self.hbNeg.isChecked()):
+            self.errorMessage("Izabrati odgovarajuće polje : HBs antigen ; trenutno ništa nije izabrano")
+            return
+        if(not self.endoPrisustvo.isChecked() and not self.endoOdsustvo.isChecked()):
+            self.errorMessage("Izabrati odgovarajuće polje : Endoskopija ; trenutno ništa nije izabrano")
+            return
+        if(not self.opDa.isChecked() and not self.opNe.isChecked()):
+            self.errorMessage("Izabrati odgovarajuće polje : Operacija ; trenutno ništa nije izabrano")
+            return
+       
         # Dodavanje u recnik
         
         data['ime'] = self.punoIme
@@ -830,6 +900,8 @@ class Ui_MainWindow(object):
         data['lbo'] = self.lbo
         data['filijala'] = self.filijala
         data['knjizica'] = self.datumVazenjaZKpolje
+        data['lek_lista'] = self.lek
+
         if(self.vidTerapije == 'Uvođenje leka u terapiju'):
             data['vid_terapije'] = 1
         elif(self.vidTerapije == 'Terapije održavanja'):
@@ -846,8 +918,15 @@ class Ui_MainWindow(object):
         data['lokalizacija'] = self.lokalizacija
         data['fistula'] = self.fistula
         data['apsces'] = self.apsces
+        data['hbs_antigen'] = True if self.hbPoz.isChecked() else False
         data['klinicka_aktivnost'] = self.klinickaAktivnost
         data['datum'] = self.datumEndo.dateTime().toString('MM.yyyy.')
+        data['quantiferon_gold'] = True if self.qgPoz.isChecked() else False
+        data['endoskopija'] = True if self.endoPrisustvo.isChecked() else False
+        data['rtg_uredan'] = True if self.rtgUredan.isChecked() else False
+        data['clostridium'] = True if self.testPoz.isChecked() else False
+        data['operacija'] = True if self.opDa.isChecked() else False
+       
         print(self.datumVazenjaZKpolje + ' Ime: ' + self.punoIme + ' Filijala: ' + self.filijala + ' JMBG:' + self.jmbgPolje + ' ' + self.vidTerapije)
         for item in data:
             print(item + " " + str(data[item]))

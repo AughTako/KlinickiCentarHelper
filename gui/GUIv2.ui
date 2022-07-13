@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>782</width>
+    <width>784</width>
     <height>880</height>
    </rect>
   </property>
@@ -1548,6 +1548,123 @@
         <height>20</height>
        </rect>
       </property>
+     </widget>
+     <widget class="QGroupBox" name="lekoviGBox">
+      <property name="geometry">
+       <rect>
+        <x>380</x>
+        <y>150</y>
+        <width>221</width>
+        <height>141</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Lekovi</string>
+      </property>
+      <widget class="QCheckBox" name="remicadeCBox">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>20</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Remicade</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="remsimaCBox">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>40</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Remsima</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="inflectraCBox">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>60</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Inflectra</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="humiraCBox">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>80</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Humira</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="amgevitaCBox">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>100</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Amgevita</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="hyrimozCBox">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>120</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Hyrimoz</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="idacioCBox">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>20</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Idacio</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="entyvioCBox">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>40</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Entyvio</string>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="dodajPoljaTab">
