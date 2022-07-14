@@ -14,6 +14,9 @@ from lokalizacijaDialog import Ui_Dialog
 from fistulaDialog import Ui_fistulaDialog
 from apscesiDialog import Ui_apscDialog
 from manifestacijeDialog import Ui_ManifestacijeDialog
+from rtgDialog import Ui_RTGNalaz
+from operacijeDialog import Ui_operacijeDialog
+from razloziOpDialog import Ui_RazlogOpDialog
 
 data = {
     "ime" : "",
@@ -46,9 +49,10 @@ data = {
     "hbs_antigen" : True,
     "endoskopija" : "",
     "operacija" : True,
-    "br_operacija" : 2,
-    "razlog_operacije" : 3,
-    "prisutna" : 0,
+    "br_operacija" : '',
+    "razlog_operacije" : '',
+    "rtg_nalaz" : '',
+    "prisutna" : [],
 
     "kortiko_oralno" : 2,
     "kortiko_doza" : "2mg",
@@ -81,19 +85,25 @@ data = {
 
 
 class Ui_MainWindow(object):
-    punoIme = jmbgPolje = lbo = starost = pol = filijala = datumVazenjaZKpolje = telesnaMasa = telesnaVisina = bodyMassInd = vidTerapije = klinickaAktivnost = ''
+    punoIme = jmbgPolje = lbo = starost = pol = filijala = datumVazenjaZKpolje = telesnaMasa = telesnaVisina = vidTerapije = klinickaAktivnost = ''
     crpPolje = fekalniKalprotektin = ''
     lek = []
     lokalizacija = []
     ponasanjeBolesti = []
     fistula = []
     apsces = []
+    operacije = 'jedna'
+    prisutno = []
+    razloziOp = []
     ekstraIntManif = hbAntigen = testClost = False
     lok_Dialog = Ui_Dialog()
     fist_Dialog = Ui_fistulaDialog()
     apsc_Dialog = Ui_apscDialog()
     manif_Dialog = Ui_ManifestacijeDialog()
-
+    rtg_Dialog = Ui_RTGNalaz()
+    operacije_Dialog = Ui_operacijeDialog()
+    razlogOp_Dialog_Real = Ui_RazlogOpDialog()
+    
     def lokalizacijaDialog(self):
         if(self.drugoCheckBox.isChecked()):
             Dialog = QtWidgets.QDialog()
@@ -125,7 +135,31 @@ class Ui_MainWindow(object):
             self.manif_Dialog.setupUi(Dialog)
             Dialog.show()
             Dialog.exec_()
+    
+    def rtgDialog(self):
+        if(self.rtgIzmenjen.isChecked()):
+            Dialog = QtWidgets.QDialog()
+            self.rtg_Dialog = Ui_RTGNalaz()
+            self.rtg_Dialog.setupUi(Dialog)
+            Dialog.show()
+            Dialog.exec_()
 
+    def operacijaDialog(self):
+        if(self.opJedna.isChecked() or self.opVise.isChecked()):
+            Dialog = QtWidgets.QDialog()
+            self.operacije_Dialog = Ui_operacijeDialog()
+            self.operacije_Dialog.setupUi(Dialog)
+            Dialog.show()
+            Dialog.exec_()
+    
+    def razlogOpDialog(self):
+        if(self.razlogCBox.isChecked()):
+            Dialog = QtWidgets.QDialog()
+            self.razlogOp_Dialog_Real = Ui_RazlogOpDialog()
+            self.razlogOp_Dialog_Real.setupUi(Dialog)
+            Dialog.show()
+            Dialog.exec_()
+  
     def setupUi(self, MainWindow):
         MainWindow.setObjectName('MainWindow')
         MainWindow.setFixedSize(782, 880)
@@ -258,10 +292,26 @@ class Ui_MainWindow(object):
         self.label_11.setGeometry(QtCore.QRect(10, 310, 81, 21))
         font = QtGui.QFont()
         font.setPointSize(10)
+        font2 = QtGui.QFont()
+        font2.setPointSize(10)
+        font2.setBold(True)
+        font2.setWeight(75)
+        self.label_3 = QtWidgets.QLabel(self.OsnovniPodaci)
+        self.label_3.setObjectName(u"label_3")
+        self.label_3.setGeometry(QtCore.QRect(270, 280, 47, 21))
+        self.label_3.setFont(font2)
+        self.label_29 = QtWidgets.QLabel(self.OsnovniPodaci)
+        self.label_29.setObjectName(u"label_29")
+        self.label_29.setGeometry(QtCore.QRect(270, 250, 47, 21))
+        self.label_29.setFont(font2)
+        self.label_30 = QtWidgets.QLabel(self.OsnovniPodaci)
+        self.label_30.setObjectName(u"label_30")
+        self.label_30.setGeometry(QtCore.QRect(270, 310, 51, 21))
+        self.label_30.setFont(font2)
         self.label_11.setFont(font)
         self.label_11.setObjectName('label_11')
         self.izmeniOsnPodatkeDugme = QtWidgets.QPushButton(self.OsnovniPodaci)
-        self.izmeniOsnPodatkeDugme.setGeometry(QtCore.QRect(300, 800, 181, 23))
+        self.izmeniOsnPodatkeDugme.setGeometry(QtCore.QRect(290, 790, 191, 41))
         self.izmeniOsnPodatkeDugme.setObjectName('izmeniOsnPodatkeDugme')
         self.Ime = QtWidgets.QLineEdit(self.OsnovniPodaci)
         self.Ime.setGeometry(QtCore.QRect(130, 20, 131, 20))
@@ -330,7 +380,7 @@ class Ui_MainWindow(object):
         self.label_19.setFont(font)
         self.label_19.setObjectName('label_19')
         self.kAktBolestiCBox = QtWidgets.QComboBox(self.OsnovniPodaci)
-        self.kAktBolestiCBox.setGeometry(QtCore.QRect(160, 540, 81, 22))
+        self.kAktBolestiCBox.setGeometry(QtCore.QRect(160, 540, 111, 22))
         self.kAktBolestiCBox.setObjectName('kAktBolestiCBox')
         self.kAktBolestiCBox.addItem('')
         self.kAktBolestiCBox.addItem('')
@@ -609,6 +659,53 @@ class Ui_MainWindow(object):
         self.dodajPoljeDugme.setGeometry(QtCore.QRect(340, 790, 91, 31))
         self.dodajPoljeDugme.setObjectName('dodajPoljeDugme')
         self.dodajPoljaTab.addTab(self.dodajPoljaTab1, '')
+        self.label_31 = QtWidgets.QLabel(self.OsnovniPodaci)
+        self.label_31.setObjectName(u"label_31")
+        self.label_31.setGeometry(QtCore.QRect(490, 710, 161, 21))
+        self.label_31.setFont(font)
+        self.operacijaGroupBox_2 = QtWidgets.QGroupBox(self.OsnovniPodaci)
+        self.operacijaGroupBox_2.setObjectName(u"operacijaGroupBox_2")
+        self.operacijaGroupBox_2.setGeometry(QtCore.QRect(650, 710, 121, 21))
+        self.operacijaGroupBox_2.setFlat(True)
+        self.opJedna = QtWidgets.QRadioButton(self.operacijaGroupBox_2)
+        self.opJedna.setObjectName(u"opJedna")
+        self.opJedna.setGeometry(QtCore.QRect(0, 0, 51, 17))
+        self.opJedna.setAutoExclusive(True)
+        self.opVise = QtWidgets.QRadioButton(self.operacijaGroupBox_2)
+        self.opVise.setObjectName(u"opVise")
+        self.opVise.setGeometry(QtCore.QRect(50, 0, 71, 17))
+        self.opVise.setAutoExclusive(True)
+        self.razlogLab = QtWidgets.QLabel(self.OsnovniPodaci)
+        self.razlogLab.setObjectName(u"razlogLab")
+        self.razlogLab.setGeometry(QtCore.QRect(490, 760, 101, 21))
+        self.razlogLab.setFont(font)
+        self.prisutnaLab = QtWidgets.QLabel(self.OsnovniPodaci)
+        self.prisutnaLab.setObjectName(u"prisutnaLab")
+        self.prisutnaLab.setGeometry(QtCore.QRect(490, 800, 61, 21))
+        self.prisutnaLab.setFont(font)
+        self.groupBox = QtWidgets.QGroupBox(self.OsnovniPodaci)
+        self.groupBox.setObjectName(u"groupBox")
+        self.groupBox.setGeometry(QtCore.QRect(600, 730, 171, 61))
+        self.groupBox.setFlat(True)
+        self.stenozaCBox = QtWidgets.QCheckBox(self.groupBox)
+        self.stenozaCBox.setObjectName(u"stenozaCBox")
+        self.stenozaCBox.setGeometry(QtCore.QRect(0, 10, 70, 17))
+        self.razlogCBox = QtWidgets.QCheckBox(self.groupBox)
+        self.razlogCBox.setObjectName(u"razlogCBox")
+        self.razlogCBox.setGeometry(QtCore.QRect(100, 10, 70, 17))
+        self.penetrarnaCBox = QtWidgets.QCheckBox(self.groupBox)
+        self.penetrarnaCBox.setObjectName(u"penetrarnaCBox")
+        self.penetrarnaCBox.setGeometry(QtCore.QRect(0, 30, 111, 17))
+        self.groupBox_2 = QtWidgets.QGroupBox(self.OsnovniPodaci)
+        self.groupBox_2.setObjectName(u"groupBox_2")
+        self.groupBox_2.setGeometry(QtCore.QRect(600, 790, 171, 31))
+        self.groupBox_2.setFlat(True)
+        self.ileostomaCBox = QtWidgets.QCheckBox(self.groupBox_2)
+        self.ileostomaCBox.setObjectName(u"ileostomaCBox")
+        self.ileostomaCBox.setGeometry(QtCore.QRect(0, 10, 70, 17))
+        self.kolostomaCBox = QtWidgets.QCheckBox(self.groupBox_2)
+        self.kolostomaCBox.setObjectName(u"kolostomaCBox")
+        self.kolostomaCBox.setGeometry(QtCore.QRect(100, 10, 71, 17))
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName('statusbar')
@@ -626,7 +723,25 @@ class Ui_MainWindow(object):
         self.apscDa.toggled.connect(self.apscesHiddenGroupBox_2.show)
         self.fistulaNe.toggled.connect(self.fistulaHiddenGroupBox.hide)
         self.apscNe.toggled.connect(self.apscesHiddenGroupBox_2.hide)
+        self.opDa.toggled.connect(self.groupBox.show)
+        self.opDa.toggled.connect(self.groupBox_2.show)
+        self.opDa.toggled.connect(self.operacijaGroupBox_2.show)
+        self.opDa.toggled.connect(self.razlogLab.show)
+        self.opDa.toggled.connect(self.label_31.show)
+        self.opDa.toggled.connect(self.prisutnaLab.show)
+
+
+        self.opNe.toggled.connect(self.groupBox.hide)
+        self.opNe.toggled.connect(self.groupBox_2.hide)
+        self.opNe.toggled.connect(self.operacijaGroupBox_2.hide)
+        self.opNe.toggled.connect(self.razlogLab.hide)
+        self.opNe.toggled.connect(self.label_31.hide)
+        self.opNe.toggled.connect(self.prisutnaLab.hide)
         self.izmeniOsnPodatkeDugme.clicked.connect(self.takeArgs)
+        self.rtgIzmenjen.toggled.connect(self.rtgDialog)
+        self.opJedna.toggled.connect(self.operacijaDialog)
+        self.opVise.toggled.connect(self.operacijaDialog)
+        self.razlogCBox.stateChanged.connect(self.razlogOpDialog)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -722,8 +837,30 @@ class Ui_MainWindow(object):
         self.hyrimozCBox.setText(_translate("MainWindow", "Hyrimoz"))
         self.idacioCBox.setText(_translate("MainWindow", "Idacio"))
         self.entyvioCBox.setText(_translate("MainWindow", "Entyvio"))
+        self.label_29.setText(_translate("MainWindow", u"[kg]", None))
+        self.label_3.setText(_translate("MainWindow", u"[cm]", None))
+        self.label_30.setText(_translate("MainWindow", u"<html><head/><body><p>[kg/m<span style=\" vertical-align:super;\">2</span>]</p></body></html>", None))
+        self.label_31.setText(_translate("MainWindow", u"Broj operacija", None))
+        self.operacijaGroupBox_2.setTitle("")
+        self.opJedna.setText(_translate("MainWindow", u"Jedna", None))
+        self.opVise.setText(_translate("MainWindow", u"Dve ili vi\u0161e", None))
+        self.razlogLab.setText(_translate("MainWindow", u"Razlog operacije", None))
+        self.prisutnaLab.setText(_translate("MainWindow", u"Prisustna", None))
+        self.groupBox.setTitle("")
+        self.stenozaCBox.setText(_translate("MainWindow", u"Stenoza", None))
+        self.razlogCBox.setText(_translate("MainWindow", u"Drugo", None))
+        self.penetrarnaCBox.setText(_translate("MainWindow", u"Penetrarna bolest", None))
+        self.groupBox_2.setTitle("")
+        self.ileostomaCBox.setText(_translate("MainWindow", u"Ileostoma", None))
+        self.kolostomaCBox.setText(_translate("MainWindow", u"Kolostoma", None))
         self.fistulaHiddenGroupBox.hide()
         self.apscesHiddenGroupBox_2.hide()
+        self.operacijaGroupBox_2.hide()
+        self.groupBox.hide()
+        self.groupBox_2.hide()
+        self.label_31.hide()
+        self.razlogLab.hide()
+        self.prisutnaLab.hide()
 
     def errorMessage(self, displayMessage = ''):
         # Neki osnovni errorMessage dialog
@@ -739,7 +876,7 @@ class Ui_MainWindow(object):
         #        da li je polje modifikovano ili nesto???
 
         # Prvi klaster podataka
-       
+        self.BMI.clear()
         if(self.Ime.text() != ''):
             ime = self.Ime.text()
             ime = ime.lower()
@@ -783,8 +920,8 @@ class Ui_MainWindow(object):
         self.telesnaVisina = self.TV.text() if self.TV.text() != '' else self.errorMessage('Nedostaje telesna visina!')
         if(self.TV.text() == ''):
             return
-        self.bodyMassInd = float(self.telesnaMasa) / (float(self.telesnaVisina)/100 * float(self.telesnaVisina)/100)
-        self.BMI.insert(str(round(self.bodyMassInd, 2)))
+        bodyMassInd = float(self.telesnaMasa) / (float(self.telesnaVisina)/100 * float(self.telesnaVisina)/100)
+        self.BMI.insert(str(round(bodyMassInd, 2)))
         self.starost = int(self.godineZivota.text())
         
         if(self.remicadeCBox.isChecked()):
@@ -857,7 +994,8 @@ class Ui_MainWindow(object):
                 return
         
         if(self.eimNe.isChecked()):
-            data['ekstraintestinalne_manifestacije'] = self.manif_Dialog.opis_Manifest
+            data['ekstraintestinalne_manifestacije'] = True
+            data['vrsta_eim'] = self.manif_Dialog.opis_Manifest
 
         data['trajanje_bolesti'] = str(round(((self.datumTrajanja.dateTime().daysTo(QtCore.QDateTime.currentDateTime()) + 1)*0.0329), 0)).replace('.0', '') + ' meseci'
         
@@ -871,9 +1009,32 @@ class Ui_MainWindow(object):
         self.fekalniKalprotektin = self.fekalniKal.text() if self.fekalniKal.text() != '' else self.errorMessage("Nedostaje fekalni kalprotektin!")
         if(self.fekalniKal.text() == ''):
             return
-        
+        if(self.rtgIzmenjen.isChecked()):
+            data['rtg_nalaz'] = self.rtg_Dialog.rtg_Nalaz
         data['crp'] = self.crpPolje
         data['kalprotektin'] = self.fekalniKalprotektin
+        
+        if(self.opDa.isChecked()):
+            if(self.opJedna.isChecked() or self.opVise.isChecked()):
+                if(self.opJedna.isChecked()):
+                    self.operacije = 'Jedna'
+                else:
+                    self.operacije = 'Dve ili više'
+                data['operacija'] = Ui_operacijeDialog.opis_Operacije
+                data['br_operacija'] = self.operacije
+            if(self.stenoCheckBox.isChecked()):
+                self.razloziOp.append(1)
+            if(self.penetrarnaCBox.isChecked()):
+                self.razloziOp.append(2)
+            if(self.razlogCBox.isChecked()):
+                data['razlog_operacije'] = self.razlogOp_Dialog_Real.opis_RazOperacije
+                self.razloziOp.append(3)
+            if(self.ileostomaCBox.isChecked()):
+                self.prisutno.append(1)
+            if(self.kolostomaCBox.isChecked()):
+                self.prisutno.append(2)
+
+        
         if(not self.qgPoz.isChecked() and not self.qgNeg.isChecked()):
             self.errorMessage("Izabrati odgovarajuće polje : Quantiferon gold ; trenutno ništa nije izabrano")
             return
@@ -892,7 +1053,7 @@ class Ui_MainWindow(object):
         if(not self.opDa.isChecked() and not self.opNe.isChecked()):
             self.errorMessage("Izabrati odgovarajuće polje : Operacija ; trenutno ništa nije izabrano")
             return
-       
+
         # Dodavanje u recnik
         
         data['ime'] = self.punoIme
@@ -914,7 +1075,7 @@ class Ui_MainWindow(object):
         data['pol'] = self.pol
         data['tm'] = self.telesnaMasa
         data['tv'] = self.telesnaVisina
-        data['bmi'] = self.bodyMassInd
+        data['bmi'] = bodyMassInd
         data['lokalizacija'] = self.lokalizacija
         data['fistula'] = self.fistula
         data['apsces'] = self.apsces
@@ -926,7 +1087,8 @@ class Ui_MainWindow(object):
         data['rtg_uredan'] = True if self.rtgUredan.isChecked() else False
         data['clostridium'] = True if self.testPoz.isChecked() else False
         data['operacija'] = True if self.opDa.isChecked() else False
-       
+        data['ponasanje_bolesti'] = self.ponasanjeBolesti
+        data['prisutna'] = self.prisutno
         print(self.datumVazenjaZKpolje + ' Ime: ' + self.punoIme + ' Filijala: ' + self.filijala + ' JMBG:' + self.jmbgPolje + ' ' + self.vidTerapije)
         for item in data:
             print(item + " " + str(data[item]))
